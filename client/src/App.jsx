@@ -15,6 +15,14 @@ function App() {
     getProductData();
   }, []);
 
+  const handleDeleteData = async (id) => {
+    await axios.delete(`http://localhost:4001/products/${id}`);
+    const newResult = productData.filter((item) => {
+      return item.id !== id;
+    });
+    setProductData(newResult);
+  };
+
   return (
     <div className="App">
       <div className="app-wrapper">
@@ -23,7 +31,7 @@ function App() {
       <div className="product-list">
         {productData.map((item) => {
           return (
-            <div className="product">
+            <div className="product" key={item["id"]}>
               <div className="product-preview">
                 <img
                   src={item["image"]}
@@ -38,7 +46,12 @@ function App() {
                 <p>Product description: {item["description"]}</p>
               </div>
 
-              <button className="delete-button">x</button>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteData(item["id"])}
+              >
+                x
+              </button>
             </div>
           );
         })}
