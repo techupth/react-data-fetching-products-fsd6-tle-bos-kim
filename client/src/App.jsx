@@ -5,27 +5,28 @@ import { useState } from "react";
 
 function App() {
   const [post, setPost] = useState("load");
-  const [del, setDel] = useState("");
 
   const dataServer = async () => {
     try {
       const getData = await axios.get("http://localhost:4001/products");
       setPost(getData.data.data);
+      console.log(1);
     } catch (error) {
       setPost("Fetching Error...");
     }
   };
 
   const handleClick = async (index) => {
-    const deleteData = await axios.delete(
-      `http://localhost:4001/products/${index}`
-    );
-    setDel(deleteData);
+    await axios.delete(`http://localhost:4001/products/${index}`);
+    const deleteDataWeb = post.filter((item) => {
+      return index !== item.id;
+    });
+    setPost(deleteDataWeb);
   };
 
   useEffect(() => {
     dataServer();
-  }, [del]);
+  }, []);
 
   return (
     <div className="App">
